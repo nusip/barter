@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 2017-09-24
  */
 @RestController
-public class AppController {
+@RequestMapping("/user")
+public class UserController {
 
     @Autowired
     private UserDao userDao;
