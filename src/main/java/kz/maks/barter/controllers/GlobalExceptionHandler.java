@@ -1,26 +1,22 @@
 package kz.maks.barter.controllers;
 
+import kz.maks.barter.dtos.BadResponse;
 import kz.maks.barter.dtos.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.text.Bidi;
-import java.util.Locale;
 
 /**
  * @author Maksat Nusipzhan
@@ -34,53 +30,49 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {BindException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected BaseResponse handleValidationError(Exception e) {
+    protected BadResponse handleValidationError(Exception e) {
         BindingResult bindingResult = null;
         if (e instanceof BindException) {
             bindingResult = ((BindException) e).getBindingResult();
         } else if (e instanceof MethodArgumentNotValidException) {
             bindingResult = ((MethodArgumentNotValidException) e).getBindingResult();
         }
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setHasErrors(true);
+        BadResponse badResponse = new BadResponse();
         for (ObjectError objectError : bindingResult.getAllErrors()) {
             String localizedMessage = messages.getMessage(objectError.getDefaultMessage(), objectError.getDefaultMessage());
             localizedMessage = messages.getMessage(objectError.getCode(), localizedMessage);
-            baseResponse.getErrors().add(localizedMessage);
+            badResponse.getErrors().add(localizedMessage);
         }
-        return baseResponse;
+        return badResponse;
     }
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected BaseResponse handleConstraintViolationException(ConstraintViolationException e) {
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setHasErrors(true);
+    protected BadResponse handleConstraintViolationException(ConstraintViolationException e) {
+        BadResponse badResponse = new BadResponse();
         for (ConstraintViolation constraintViolation : e.getConstraintViolations()) {
             String localizedMessage = messages.getMessage(constraintViolation.getMessage());
-            baseResponse.getErrors().add(localizedMessage);
+            badResponse.getErrors().add(localizedMessage);
         }
-        return baseResponse;
+        return badResponse;
     }
 
     @ExceptionHandler(value = {Exception.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected BaseResponse handleError(Exception e) {
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setHasErrors(true);
+    protected BadResponse handleError(Exception e) {
+        BadResponse badResponse = new BadResponse();
         Throwable rootCause = NestedExceptionUtils.getRootCause(e);
         rootCause = rootCause != null ? rootCause : e;
-        baseResponse.getErrors().add(rootCause.getLocalizedMessage());
-        return baseResponse;
+        badResponse.getErrors().add(rootCause.getLocalizedMessage());
+        return badResponse;
     }
 
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected BaseResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setHasErrors(true);
-        baseResponse.getErrors().add(e.getMessage());
-        return baseResponse;
+    protected BadResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        BadResponse badResponse = new BadResponse();
+        badResponse.getErrors().add(e.getMessage());
+        return badResponse;
     }
 }
 

@@ -8,6 +8,7 @@ public class ProductAddResponse extends BaseResponse {
     private Long productId;
 
     public ProductAddResponse(Long productId) {
+        super(hasErrors);
         this.productId = productId;
     }
 
