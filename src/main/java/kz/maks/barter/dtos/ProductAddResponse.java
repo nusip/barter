@@ -4,11 +4,10 @@ package kz.maks.barter.dtos;
  * @author Maksat Nusipzhan
  * @version 2017-09-27
  */
-public class ProductAddResponse extends BaseResponse {
+public class ProductAddResponse extends GoodResponse {
     private Long productId;
 
     public ProductAddResponse(Long productId) {
-        super(hasErrors);
         this.productId = productId;
     }
 

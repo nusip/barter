@@ -1,5 +1,7 @@
 package kz.maks.barter.dtos;
 
+import kz.maks.barter.entities.Product;
+
 /**
  * @author Maksat Nusipzhan
  * @version 2017-09-28
