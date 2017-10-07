@@ -3,6 +3,7 @@ package kz.maks.barter.controllers;
 import kz.maks.barter.dao.UserDao;
 import kz.maks.barter.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/user")
+@Transactional
 public class UserController {
 
     @Autowired
