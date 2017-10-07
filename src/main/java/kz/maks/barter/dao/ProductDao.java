@@ -19,8 +19,8 @@ public interface ProductDao extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.id not in (select i.product.id from Interest i where i.user.id = ?1)")
     List<Product> findProductsToMatch(Long userId, Pageable pageable);
 
-    @Query("select i.product from Interest i join i.product p where positive = true and p.user.id = ?1 and i.user.id in " +
-            "(select p.user.id from Interest i join i.product.p where positive = true and i.user.id = ?1)")
-    List<Product> findMatchedProducts(Long userId);
+//    @Query("select i.product from Interest i join i.product p where i.positive = true and p.user.id = ?1 and i.user.id in " +
+//            "(select p.user.id from Interest i join i.product.p where positive = true and i.user.id = ?1)")
+//    List<Product> findMatchedProducts(Long userId);
 
 }
